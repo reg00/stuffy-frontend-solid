@@ -10,9 +10,8 @@ import { A, useNavigate } from '@solidjs/router'
 import { useContext } from 'solid-js'
 import { AuthContext } from '../features/auth/useAuth'
 
-
 function LoginPage() {
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const [state, { login }] = useContext(AuthContext)
 
   const handleSubmit = async (e) => {
@@ -23,6 +22,7 @@ const navigate = useNavigate()
     const password = e.target.password.value
 
     const payload = { username, password }
+
 
     await login(payload)
 
