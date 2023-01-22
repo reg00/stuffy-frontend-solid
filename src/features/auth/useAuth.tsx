@@ -1,26 +1,32 @@
-import { Accessor, createContext, createSignal } from 'solid-js'
+import { Accessor, createContext, createSignal, } from 'solid-js'
+import { useNavigate } from '@solidjs/router'
 import { createStore } from 'solid-js/store'
-import api from '../../api/api'
+import api, {instance} from '../../api/api'
 import { GetUserEntry } from '../../api/__generated__/stuffyHelperApi'
+import setupAxiosInterceptors from './middlewares'
+
+
+type User = Required<GetUserEntry>
 
 type LoginModel = {
   username: string
   password: string
 }
 
-type State = {
-  user: GetUserEntry | null
-  loading: boolean
-}
 export const AuthContext = createContext([{user: null, loading: false}, {login: undefined}])
 
 export function AuthProvider(props) {
-  // const [user, setUser] = createSignal<GetUserEntry>()
-  // const [loading, setLoading] = createSignal(false)
+  const navigate = useNavigate()
   const [state, setState] = createStore({user: null, loading: false});
+  
+  setupAxiosInterceptors(instance, navigate)
 
   const setLoading = (val: boolean) => {
     setState('loading', val)
+  }
+
+  const setUser = (val: User) => {
+    setState('user', val)
   }
 
 
@@ -28,14 +34,15 @@ export function AuthProvider(props) {
     setLoading(true)
 
     try {
-      await api.authLoginCreate(payload)
+      const {data} = await api.authLoginCreate(payload)
+
+      setUser(data as User)
     } catch (error) {
+      console.log('error', error)
     } finally {
       setLoading(false)
     }
   }
-
-  //   const store = [state, {}]
 
   const store = [
     state,

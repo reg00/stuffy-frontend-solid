@@ -20,13 +20,13 @@ const config: HopeThemeConfig = {
 // 3. Pass the `config` prop to the `HopeProvider`
 function AppWithHope() {
   return (
-    <AuthProvider>
-      <HopeProvider config={config}>
-        <Router>
+    <Router>
+      <AuthProvider>
+        <HopeProvider config={config}>
           <MyApp />
-        </Router>
-      </HopeProvider>
-    </AuthProvider>
+        </HopeProvider>
+      </AuthProvider>
+    </Router>
   )
 }
 

@@ -6,29 +6,27 @@ import {
   Input,
   Button,
 } from '@hope-ui/solid'
-import { A } from '@solidjs/router'
+import { A, useNavigate } from '@solidjs/router'
 import { useContext } from 'solid-js'
 import { AuthContext } from '../features/auth/useAuth'
 
+
 function LoginPage() {
-  const [state, {login}]= useContext(AuthContext)
+const navigate = useNavigate()
+  const [state, { login }] = useContext(AuthContext)
 
-  console.log("LOGIN", login)
-  
-
-
-
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-
 
     const username = e.target.username.value
 
     const password = e.target.password.value
 
-    const payload = {username, password}
+    const payload = { username, password }
 
-    login(payload)
+    await login(payload)
+
+    navigate('/')
   }
 
   return (
@@ -43,13 +41,18 @@ function LoginPage() {
             <FormLabel for="password">Пароль</FormLabel>
             <Input id="password" type="password" />
           </FormControl>
-          <Button type='submit' disabled={state.loading} loading={state.loading}>Войти</Button>
-            <A href="/signup">Хотите зарегистрироваться?</A>
+          <Button
+            type="submit"
+            disabled={state.loading}
+            loading={state.loading}
+          >
+            Войти
+          </Button>
+          <A href="/signup">Хотите зарегистрироваться?</A>
         </form>
       </div>
-</div>
+    </div>
   )
 }
 
 export default LoginPage
-
