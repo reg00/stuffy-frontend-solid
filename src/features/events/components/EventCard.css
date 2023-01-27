@@ -1,0 +1,33 @@
+.event-card {
+ display: flex;
+  justify-content: right;
+  color: inherit;
+}
+
+.event-card a {
+  text-decoration: none;
+}
+
+.event-card__top {
+  display: flex;
+}
+
+.event-card__time {
+  margin-left: auto;
+  color: #bdbdbd;
+}
+
+.event-card__desc {
+  margin-top: 8px;
+}
+
+.event-card__btns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.event-card__text {
+  width: 100%;
+  flex-direction: column;
+}

@@ -33,6 +33,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@stitches/core", "npm:1.2.8"],\
             ["autoprefixer", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:10.4.13"],\
             ["axios", "npm:1.2.3"],\
+            ["dayjs", "npm:1.11.7"],\
             ["node-fetch-h2", "npm:2.3.1-0"],\
             ["postcss", "npm:8.4.21"],\
             ["solid-js", "npm:1.6.9"],\
@@ -1503,6 +1504,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/data-uri-to-buffer-npm-4.0.1-5c66a78beb-0d0790b67f.zip/node_modules/data-uri-to-buffer/",\
           "packageDependencies": [\
             ["data-uri-to-buffer", "npm:4.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["dayjs", [\
+        ["npm:1.11.7", {\
+          "packageLocation": "./.yarn/cache/dayjs-npm-1.11.7-d5cd5b2919-5003a7c1dd.zip/node_modules/dayjs/",\
+          "packageDependencies": [\
+            ["dayjs", "npm:1.11.7"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3807,6 +3817,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@stitches/core", "npm:1.2.8"],\
             ["autoprefixer", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:10.4.13"],\
             ["axios", "npm:1.2.3"],\
+            ["dayjs", "npm:1.11.7"],\
             ["node-fetch-h2", "npm:2.3.1-0"],\
             ["postcss", "npm:8.4.21"],\
             ["solid-js", "npm:1.6.9"],\

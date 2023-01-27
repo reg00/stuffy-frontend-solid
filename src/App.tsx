@@ -4,6 +4,7 @@ import Login from './pages/LoginPage'
 import SignUp from './pages/SignUpPage'
 import SignOut from './pages/SignoutPage'
 import Events from './pages/EventsPage'
+import Event from './pages/EventPage'
 import SignUpSuccess from './pages/SignUpSuccessPage'
 import { AuthContext } from './features/auth/useAuth'
 
@@ -54,6 +55,7 @@ const App: Component = () => {
           <Route path="/signup/success" component={SignUpSuccess} />
           <Route path="/signup" component={SignUp} />
           <Route path="/signout" component={SignOut} />
+          <Route path="/events/:eventId" component={Event} />
           <Route path="/" component={Events} />
         </Routes>
       </div>

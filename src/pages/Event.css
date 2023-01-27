@@ -1,0 +1,39 @@
+.event__detailed {
+  display: flex;
+  flex-direction: column;
+}
+
+.event__status {
+  padding: 8px;
+  margin-left: auto;
+}
+
+.event__photo {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+}
+
+.event__date {
+  color: #b9a3a3;
+}
+
+.event__description-text {
+  color: #666666;
+}
+
+.event__participant {
+  padding: 0 4px;
+}
+
+.event__header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.list__header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
