@@ -42,3 +42,7 @@ yarn dlx @yarnpkg/sdks vscode # чтобы тайпскрипт работал �
 ## Апишка
 
 http://194.67.110.244:7777/swagger/index.html
+
+## old repo
+
+https://github.com/dimak2107/stuffy-helper-frontend

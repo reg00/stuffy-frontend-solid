@@ -12,6 +12,7 @@ import {
 import { A } from '@solidjs/router'
 import { createResource, For, onMount } from 'solid-js'
 import api from '../api/api'
+import CreateEvent from '../features/events/components/CreateEvent'
 import EventCard from '../features/events/components/EventCard'
 
 function EventsPage() {
@@ -21,7 +22,7 @@ function EventsPage() {
 
   const fetcher = () => api.eventsList().then((res) => res.data.data)
 
-  const [events] = createResource(fetcher)
+  const [events, { refetch }] = createResource(fetcher)
 
   // onMount(() => {
   //   req()
@@ -35,7 +36,9 @@ function EventsPage() {
         </BreadcrumbItem>
       </Breadcrumb>
 
-      <div class="flex flex-col">
+      <CreateEvent refetch={refetch} />
+
+      <div class="flex flex-col gap-2">
         <For each={events()} fallback={<div>Загрузка...</div>}>
           {(event) => <EventCard {...event} />}
         </For>

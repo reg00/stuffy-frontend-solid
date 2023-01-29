@@ -1,9 +1,12 @@
 /* @refresh reload */
 import './index.css'
 import { render } from 'solid-js/web'
-import { HopeThemeConfig, HopeProvider } from '@hope-ui/solid'
+import {
+  HopeThemeConfig,
+  HopeProvider,
+  NotificationsProvider,
+} from '@hope-ui/solid'
 import { Router } from '@solidjs/router'
-
 
 import MyApp from './App'
 import AuthProvider from './features/auth/AuthProvider'
@@ -23,7 +26,9 @@ function AppWithHope() {
     <Router>
       <AuthProvider>
         <HopeProvider config={config}>
-          <MyApp />
+          <NotificationsProvider>
+            <MyApp />
+          </NotificationsProvider>
         </HopeProvider>
       </AuthProvider>
     </Router>
