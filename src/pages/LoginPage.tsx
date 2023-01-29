@@ -43,8 +43,8 @@ function LoginPage() {
           </FormControl>
           <Button
             type="submit"
-            disabled={state.loading}
-            loading={state.loading}
+            disabled={state.loading()}
+            loading={state.loading()}
           >
             Войти
           </Button>

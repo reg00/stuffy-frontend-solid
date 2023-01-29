@@ -1,4 +1,5 @@
 /* eslint-disable */
+// @ts-nocheck
 /* tslint:disable */
 /*
  * ---------------------------------------------------------------
@@ -17,21 +18,12 @@ export interface AddPurchaseEntry {
   /** @format double */
   amount: number
   /** @format uuid */
-  shoppingId: string
+  eventId: string
+  /** @format uuid */
+  participantId: string
   purchaseTags?: PurchaseTagShortEntry[] | null
   /** @format uuid */
   unitTypeId: string
-}
-
-export interface AddShoppingEntry {
-  /** @format date-time */
-  shoppingDate: string
-  /** @format uuid */
-  participantId: string
-  /** @format uuid */
-  eventId: string
-  /** @minLength 1 */
-  description: string
 }
 
 export interface ErrorResponse {
@@ -99,7 +91,7 @@ export interface GetEventEntry {
   mediaUri?: string | null
   user: UserShortEntry
   participants?: ParticipantShortEntry[] | null
-  shoppings?: ShoppingShortEntry[] | null
+  purchases?: PurchaseShortEntry[] | null
   medias?: MediaShortEntry[] | null
 }
 
@@ -118,7 +110,7 @@ export interface GetParticipantEntry {
   id: string
   user: UserShortEntry
   event: EventShortEntry
-  shoppings?: ShoppingShortEntry[] | null
+  purchases?: PurchaseShortEntry[] | null
   purchaseUsages?: PurchaseUsageShortEntry[] | null
 }
 
@@ -131,7 +123,7 @@ export interface GetPurchaseEntry {
   cost: number
   /** @format double */
   amount: number
-  shopping: ShoppingShortEntry
+  event: EventShortEntry
   purchaseTags?: PurchaseTagShortEntry[] | null
   unitType: UnitTypeShortEntry
   purchaseUsages?: PurchaseUsageShortEntry[] | null
@@ -150,19 +142,6 @@ export interface GetPurchaseUsageEntry {
   id: string
   participant: ParticipantShortEntry
   purchase: PurchaseShortEntry
-}
-
-export interface GetShoppingEntry {
-  /** @format uuid */
-  id: string
-  /** @format date-time */
-  shoppingDate: string
-  check?: string | null
-  /** @minLength 1 */
-  description: string
-  event: EventShortEntry
-  participant: ParticipantShortEntry
-  purchases?: PurchaseShortEntry[] | null
 }
 
 export interface GetUnitTypeEntry {
@@ -294,24 +273,6 @@ export interface RegisterModel {
   password: string
 }
 
-export interface ShoppingShortEntry {
-  /** @format uuid */
-  id: string
-  /** @format date-time */
-  shoppingDate: string
-  check?: string | null
-  /** @minLength 1 */
-  description: string
-}
-
-export interface ShoppingShortEntryResponse {
-  data?: ShoppingShortEntry[] | null
-  /** @format int32 */
-  totalPages?: number
-  /** @format int32 */
-  total?: number
-}
-
 export interface UnitTypeShortEntry {
   /** @format uuid */
   id: string
@@ -335,7 +296,6 @@ export interface UpdateEventEntry {
   eventDateStart: string
   /** @format date-time */
   eventDateEnd?: string
-  isCompleted: boolean
 }
 
 export interface UpdatePurchaseEntry {
@@ -348,16 +308,6 @@ export interface UpdatePurchaseEntry {
   purchaseTags?: PurchaseTagShortEntry[] | null
   /** @format uuid */
   unitTypeId: string
-}
-
-export interface UpdateShoppingEntry {
-  /** @format date-time */
-  shoppingDate: string
-  /** @format uuid */
-  participantId: string
-  check?: string | null
-  /** @minLength 1 */
-  description: string
 }
 
 export interface UpsertParticipantEntry {
@@ -554,7 +504,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     authRegisterCreate: (data: RegisterModel, params: RequestParams = {}) =>
-      this.request<GetUserEntry, ErrorResponse>({
+      this.request<string, ErrorResponse>({
         path: `/api/auth/register`,
         method: 'POST',
         body: data,
@@ -621,6 +571,81 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/auth/logout`,
         method: 'POST',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authorization
+     * @name AuthResetPasswordCreate
+     * @summary Отправка на email ссылки на сброс пароля
+     * @request POST:/api/auth/reset-password
+     * @secure
+     */
+    authResetPasswordCreate: (
+      query: {
+        /** @format email */
+        Email: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<void, any>({
+        path: `/api/auth/reset-password`,
+        method: 'POST',
+        query: query,
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authorization
+     * @name AuthResetPasswordConfirmList
+     * @request GET:/api/auth/reset-password-confirm
+     * @secure
+     */
+    authResetPasswordConfirmList: (
+      query?: {
+        code?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<void, any>({
+        path: `/api/auth/reset-password-confirm`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authorization
+     * @name AuthResetPasswordConfirmCreate
+     * @summary Сброс пароля. Выполняется после того, как перейдешь по ссылке на мыле.
+     * @request POST:/api/auth/reset-password-confirm
+     * @secure
+     */
+    authResetPasswordConfirmCreate: (
+      query: {
+        /** @format email */
+        Email: string
+        /** @format password */
+        Password: string
+        /** @format password */
+        ConfirmPassword?: string
+        Code?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<void, any>({
+        path: `/api/auth/reset-password-confirm`,
+        method: 'POST',
+        query: query,
         secure: true,
         ...params,
       }),
@@ -715,9 +740,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     authEditPartialUpdate: (
       query: {
         Username: string
-        /** @format email */
-        Email?: string
-        Password?: string
         FirstName?: string
         MiddleName?: string
         LastName?: string
@@ -776,7 +798,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @format uuid */
         participantId?: string
         /** @format uuid */
-        shoppingId?: string
+        purchaseId?: string
       },
       params: RequestParams = {}
     ) =>
@@ -916,6 +938,42 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.FormData,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Event
+     * @name EventsCompleteCreate
+     * @summary Завершение ивента
+     * @request POST:/api/events/{eventId}/complete
+     * @secure
+     */
+    eventsCompleteCreate: (eventId: string, params: RequestParams = {}) =>
+      this.request<EventShortEntry, ErrorResponse>({
+        path: `/api/events/${eventId}/complete`,
+        method: 'POST',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Event
+     * @name EventsReopenCreate
+     * @summary Завершение ивента
+     * @request POST:/api/events/{eventId}/reopen
+     * @secure
+     */
+    eventsReopenCreate: (eventId: string, params: RequestParams = {}) =>
+      this.request<EventShortEntry, ErrorResponse>({
+        path: `/api/events/${eventId}/reopen`,
+        method: 'POST',
+        secure: true,
         format: 'json',
         ...params,
       }),
@@ -1325,7 +1383,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @format double */
         costMax?: number
         /** @format uuid */
-        shoppingId?: string
+        eventId?: string
         purchaseTags?: string[]
         /** @format uuid */
         unitTypeId?: string
@@ -1636,123 +1694,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<PurchaseUsageShortEntry, ErrorResponse>({
         path: `/api/purchase-usages/${purchaseUsageId}`,
-        method: 'PATCH',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Shopping
-     * @name ShoppingsList
-     * @summary Получение списка походов в магазин
-     * @request GET:/api/shoppings
-     * @secure
-     */
-    shoppingsList: (
-      query?: {
-        /**
-         * @format int32
-         * @default 0
-         */
-        offset?: number
-        /**
-         * @format int32
-         * @default 10
-         */
-        limit?: number
-        /** @format date-time */
-        shoppingDateStart?: string
-        /** @format date-time */
-        shoppingDateEnd?: string
-        /** @format uuid */
-        participantId?: string
-        /** @format uuid */
-        eventId?: string
-        description?: string
-      },
-      params: RequestParams = {}
-    ) =>
-      this.request<ShoppingShortEntryResponse, ErrorResponse | void>({
-        path: `/api/shoppings`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Shopping
-     * @name ShoppingsCreate
-     * @summary Добавление похода в магазин
-     * @request POST:/api/shoppings
-     * @secure
-     */
-    shoppingsCreate: (data: AddShoppingEntry, params: RequestParams = {}) =>
-      this.request<ShoppingShortEntry, ErrorResponse>({
-        path: `/api/shoppings`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Shopping
-     * @name ShoppingsDetail
-     * @summary Получение информации о походе в магазин по идентификатору
-     * @request GET:/api/shoppings/{shoppingId}
-     * @secure
-     */
-    shoppingsDetail: (shoppingId: string, params: RequestParams = {}) =>
-      this.request<GetShoppingEntry, ErrorResponse | void>({
-        path: `/api/shoppings/${shoppingId}`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Shopping
-     * @name ShoppingsDelete
-     * @summary Удаление похода в магазин
-     * @request DELETE:/api/shoppings/{shoppingId}
-     * @secure
-     */
-    shoppingsDelete: (shoppingId: string, params: RequestParams = {}) =>
-      this.request<void, ErrorResponse>({
-        path: `/api/shoppings/${shoppingId}`,
-        method: 'DELETE',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Shopping
-     * @name ShoppingsPartialUpdate
-     * @summary Изменение информации о походе в магазин
-     * @request PATCH:/api/shoppings/{shoppingId}
-     * @secure
-     */
-    shoppingsPartialUpdate: (shoppingId: string, data: UpdateShoppingEntry, params: RequestParams = {}) =>
-      this.request<ShoppingShortEntry, ErrorResponse>({
-        path: `/api/shoppings/${shoppingId}`,
         method: 'PATCH',
         body: data,
         secure: true,

@@ -4,9 +4,9 @@ import { render } from 'solid-js/web'
 import { HopeThemeConfig, HopeProvider } from '@hope-ui/solid'
 import { Router } from '@solidjs/router'
 
-import { AuthProvider } from './features/auth/useAuth'
 
 import MyApp from './App'
+import AuthProvider from './features/auth/AuthProvider'
 
 // 2. Create a theme config to include custom colors, fonts, etc
 const config: HopeThemeConfig = {

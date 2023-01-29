@@ -28,7 +28,7 @@ const Event: Component<GetEventEntry> = (event) => {
         <img
           src={event.mediaUri}
           alt="КРУТАЯ ФОТКА С УЧАСТНИКАМИ"
-          width={`100%`}
+          style={`max-width: 300px`}
         />
       </div>
       <h2>{event.name}</h2>
