@@ -3,16 +3,76 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbSeparator,
+  Button,
+  IconButton,
+  notificationService,
+  Tooltip,
 } from '@hope-ui/solid'
 import { useParams } from '@solidjs/router'
-import { Component, createResource, Show } from 'solid-js'
+import {
+  Component,
+  createResource,
+  createSignal,
+  For,
+  Resource,
+  Show,
+} from 'solid-js'
 import api from '../api/api'
-import { GetEventEntry } from '../api/__generated__/stuffyHelperApi'
+import {
+  GetEventEntry,
+  ParticipantShortEntry,
+} from '../api/__generated__/stuffyHelperApi'
 import { formatDate } from '../features/dates'
+import AddParticipant from '../features/events/components/AddParticipant'
+import CreateUpdatePurchase from '../features/events/components/CreateUpdatePurchase'
+import ChevronIcon from '../features/icons/ChevronIcon'
+import DeleteIcon from '../features/icons/DeleteIcon'
 
 import './Event.css'
 
-const Event: Component<GetEventEntry> = (event) => {
+type EventProps = {
+  event: GetEventEntry
+  participants: Resource<ParticipantShortEntry[]>
+  refetch: () => void
+  refetchParticipants: () => void
+}
+const Event: Component<EventProps> = ({
+  event,
+  participants,
+  refetch,
+  refetchParticipants,
+}) => {
+  const [showAddParticipant, setShowAddParticipant] = createSignal(false)
+  const [showCreate, setShowCreate] = createSignal(false)
+
+  const [loading, setLoading] = createSignal(false)
+
+  const deleteParticipant = async (participantId: string) => {
+    setLoading(true)
+    try {
+      await api.participantsDelete(participantId)
+      notificationService.show({
+        title: 'Участник удален',
+        status: 'success',
+      })
+
+      refetchParticipants()
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const deletePurchase = async (purchaseId: string) => {
+    try {
+      api.purchasesDelete(purchaseId)
+      notificationService.show({
+        title: 'Трата удалена',
+        status: 'success',
+      })
+    } finally {
+    }
+  }
+
   return (
     <div class="event__detailed p-2">
       <Breadcrumb>
@@ -38,24 +98,72 @@ const Event: Component<GetEventEntry> = (event) => {
 
       <div class="event__participants">
         <h3>Участники:</h3>
-        <p>Тут бубут участники</p>
+        <ul class="list-disc">
+          <For each={participants()}>
+            {(participant) => (
+              <li>
+                <div class="flex items-center gap-1">
+                  {participant.name}{' '}
+                  <span class="text-gray-400">
+                    {participant.id.slice(0, 4)}
+                  </span>
+                  <div class="ml-auto">
+                    <Tooltip label="Удалить участника">
+                      <IconButton
+                        variant="ghost"
+                        aria-label="Search"
+                        onClick={() => deleteParticipant(participant.id)}
+                        icon={<DeleteIcon />}
+                      />
+                    </Tooltip>
+                  </div>
+                </div>
+              </li>
+            )}
+          </For>
+        </ul>
+        <Button
+          onClick={() => setShowAddParticipant((a) => !a)}
+          rightIcon={<ChevronIcon />}
+        >
+          Добавить участника
+        </Button>
+        <Show when={showAddParticipant()}>
+          <div class="my-4">
+            <AddParticipant eventId={event.id} refetch={refetchParticipants} />
+          </div>
+        </Show>
       </div>
       <div class="event__shopping-list">
         <div class="list__header">
-          <h3>Покупки:</h3>
-          тут бубут покупки?
-          {/* <IconButton
-            class="shopping__add-btn"
-            component={Link}
-            color="success"
-            size="small"
-            to={`/events/${event.id}/shoppings/new`}
-          >
-            <AddIcon />
-          </IconButton> */}
-        </div>
+          <h3>траты:</h3>
+          <ul class="list-disc">
+            <For each={event.purchases}>
+              {(purchase) => (
+                <li>
+                  {purchase.name} ({purchase.amount}) - {purchase.cost} за{' '}
+                  {purchase.unitType.name}
+                </li>
+              )}
+            </For>
+          </ul>
 
-        <ul>тут што?</ul>
+          <div class="my-6">
+            <Button
+              onClick={() => setShowCreate((a) => !a)}
+              rightIcon={<ChevronIcon />}
+            >
+              Добавить трату
+            </Button>
+            <Show when={showCreate()}>
+              <CreateUpdatePurchase
+                eventId={event.id}
+                refetch={refetch}
+                participants={participants}
+              />
+            </Show>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -67,11 +175,25 @@ const EventPage: Component = () => {
   const fetcher = (eventId: string) =>
     api.eventsDetail(eventId).then((res) => res.data)
 
-  const [event] = createResource(() => params.eventId, fetcher)
+  const [event, { refetch }] = createResource(() => params.eventId, fetcher)
+
+  const participantsFetcher = (eventId) =>
+    api.participantsList({ eventId }).then((res) => res.data.data)
+  const [participants, { refetch: refetchParticipants }] = createResource(
+    () => params.eventId,
+    participantsFetcher
+  )
 
   return (
     <Show when={event()} keyed>
-      {(event) => <Event {...event} />}
+      {(event) => (
+        <Event
+          event={event}
+          participants={participants}
+          refetch={refetch}
+          refetchParticipants={refetchParticipants}
+        />
+      )}
     </Show>
   )
 }
