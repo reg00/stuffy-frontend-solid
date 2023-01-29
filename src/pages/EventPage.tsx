@@ -20,11 +20,13 @@ import {
 import api from '../api/api'
 import {
   GetEventEntry,
+  GetPurchaseEntry,
   ParticipantShortEntry,
 } from '../api/__generated__/stuffyHelperApi'
 import { formatDate } from '../features/dates'
 import AddParticipant from '../features/events/components/AddParticipant'
 import CreateUpdatePurchase from '../features/events/components/CreateUpdatePurchase'
+import EventTable from '../features/events/components/EventTable'
 import ChevronIcon from '../features/icons/ChevronIcon'
 import DeleteIcon from '../features/icons/DeleteIcon'
 
@@ -33,11 +35,13 @@ import './Event.css'
 type EventProps = {
   event: GetEventEntry
   participants: Resource<ParticipantShortEntry[]>
+  purchases: Resource<GetPurchaseEntry[]>
   refetch: () => void
   refetchParticipants: () => void
 }
 const Event: Component<EventProps> = ({
   event,
+  purchases,
   participants,
   refetch,
   refetchParticipants,
@@ -165,6 +169,13 @@ const Event: Component<EventProps> = ({
           </div>
         </div>
       </div>
+      <div class="events-table">
+        <h5>Таблица</h5>
+        <EventTable
+          participants={participants}
+          purchases={purchases}
+        />
+      </div>
     </div>
   )
 }
@@ -184,12 +195,17 @@ const EventPage: Component = () => {
     participantsFetcher
   )
 
+  const purchaseFetcher = (eventId) =>
+    api.purchasesList({ eventId }).then((res) => res.data.data)
+  const [purchases] = createResource(() => params.eventId, purchaseFetcher)
+
   return (
     <Show when={event()} keyed>
       {(event) => (
         <Event
           event={event}
           participants={participants}
+          purchases={purchases}
           refetch={refetch}
           refetchParticipants={refetchParticipants}
         />

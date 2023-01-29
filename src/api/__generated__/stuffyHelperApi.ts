@@ -24,6 +24,7 @@ export interface AddPurchaseEntry {
   purchaseTags?: PurchaseTagShortEntry[] | null
   /** @format uuid */
   unitTypeId: string
+  isPartial: boolean
 }
 
 export interface ErrorResponse {
@@ -108,7 +109,7 @@ export interface GetMediaEntry {
 export interface GetParticipantEntry {
   /** @format uuid */
   id: string
-  user: UserShortEntry
+  user: GetUserEntry
   event: EventShortEntry
   purchases?: PurchaseShortEntry[] | null
   purchaseUsages?: PurchaseUsageShortEntry[] | null
@@ -123,10 +124,20 @@ export interface GetPurchaseEntry {
   cost: number
   /** @format double */
   amount: number
+  isPartial: boolean
   event: EventShortEntry
   purchaseTags?: PurchaseTagShortEntry[] | null
   unitType: UnitTypeShortEntry
   purchaseUsages?: PurchaseUsageShortEntry[] | null
+  participant?: ParticipantShortEntry
+}
+
+export interface GetPurchaseEntryResponse {
+  data?: GetPurchaseEntry[] | null
+  /** @format int32 */
+  totalPages?: number
+  /** @format int32 */
+  total?: number
 }
 
 export interface GetPurchaseTagEntry {
@@ -142,6 +153,14 @@ export interface GetPurchaseUsageEntry {
   id: string
   participant: ParticipantShortEntry
   purchase: PurchaseShortEntry
+}
+
+export interface GetPurchaseUsageEntryResponse {
+  data?: GetPurchaseUsageEntry[] | null
+  /** @format int32 */
+  totalPages?: number
+  /** @format int32 */
+  total?: number
 }
 
 export interface GetUnitTypeEntry {
@@ -161,6 +180,8 @@ export interface GetUserEntry {
   middleName?: string | null
   lastName?: string | null
   phone?: string | null
+  /** @format uri */
+  imageUri?: string | null
 }
 
 export interface IdentityRole {
@@ -199,6 +220,8 @@ export interface ParticipantShortEntry {
   /** @format uuid */
   id: string
   name?: string | null
+  /** @format uri */
+  imageUri?: string | null
 }
 
 export interface ParticipantShortEntryResponse {
@@ -218,16 +241,9 @@ export interface PurchaseShortEntry {
   cost: number
   /** @format double */
   amount: number
+  isPartial: boolean
   purchaseTags?: PurchaseTagShortEntry[] | null
   unitType?: UnitTypeShortEntry
-}
-
-export interface PurchaseShortEntryResponse {
-  data?: PurchaseShortEntry[] | null
-  /** @format int32 */
-  totalPages?: number
-  /** @format int32 */
-  total?: number
 }
 
 export interface PurchaseTagShortEntry {
@@ -247,18 +263,9 @@ export interface PurchaseTagShortEntryResponse {
 
 export interface PurchaseUsageShortEntry {
   /** @format uuid */
-  id: string
-  userId?: string | null
-  name?: string | null
-  purchaseName?: string | null
-}
-
-export interface PurchaseUsageShortEntryResponse {
-  data?: PurchaseUsageShortEntry[] | null
-  /** @format int32 */
-  totalPages?: number
-  /** @format int32 */
-  total?: number
+  purchaseUsageId: string
+  /** @format uuid */
+  participantId?: string
 }
 
 export interface RegisterModel {
@@ -298,6 +305,16 @@ export interface UpdateEventEntry {
   eventDateEnd?: string
 }
 
+export interface UpdateModel {
+  /** @minLength 1 */
+  username: string
+  firstName?: string | null
+  middleName?: string | null
+  lastName?: string | null
+  /** @format tel */
+  phone?: string | null
+}
+
 export interface UpdatePurchaseEntry {
   /** @minLength 1 */
   name: string
@@ -305,6 +322,7 @@ export interface UpdatePurchaseEntry {
   cost: number
   /** @format double */
   amount: number
+  isPartial: boolean
   purchaseTags?: PurchaseTagShortEntry[] | null
   /** @format uuid */
   unitTypeId: string
@@ -343,11 +361,15 @@ export interface UserEntry {
   middleName?: string | null
   lastName?: string | null
   phone?: string | null
+  /** @format uri */
+  imageUri?: string | null
 }
 
 export interface UserShortEntry {
   id?: string | null
   name?: string | null
+  /** @format uri */
+  imageUri?: string | null
 }
 
 export interface UserShortEntryAuthResponse {
@@ -737,23 +759,56 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/api/auth/edit
      * @secure
      */
-    authEditPartialUpdate: (
-      query: {
-        Username: string
-        FirstName?: string
-        MiddleName?: string
-        LastName?: string
-        /** @format tel */
-        Phone?: string
-      },
-      params: RequestParams = {}
-    ) =>
+    authEditPartialUpdate: (data: UpdateModel, params: RequestParams = {}) =>
       this.request<UserEntry, ErrorResponse>({
         path: `/api/auth/edit`,
         method: 'PATCH',
-        query: query,
+        body: data,
         secure: true,
+        type: ContentType.Json,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authorization
+     * @name AuthAvatarCreate
+     * @summary Изменение аватара пользователя
+     * @request POST:/api/auth/avatar
+     * @secure
+     */
+    authAvatarCreate: (
+      data: {
+        /** @format binary */
+        file?: File
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<any, ErrorResponse>({
+        path: `/api/auth/avatar`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.FormData,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Authorization
+     * @name AuthAvatarDelete
+     * @summary Удаление аватара пользователя
+     * @request DELETE:/api/auth/avatar
+     * @secure
+     */
+    authAvatarDelete: (params: RequestParams = {}) =>
+      this.request<any, ErrorResponse>({
+        path: `/api/auth/avatar`,
+        method: 'DELETE',
+        secure: true,
         ...params,
       }),
 
@@ -1390,7 +1445,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {}
     ) =>
-      this.request<PurchaseShortEntryResponse, ErrorResponse | void>({
+      this.request<GetPurchaseEntryResponse, ErrorResponse | void>({
         path: `/api/purchases`,
         method: 'GET',
         query: query,
@@ -1614,7 +1669,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {}
     ) =>
-      this.request<PurchaseUsageShortEntryResponse, ErrorResponse | void>({
+      this.request<GetPurchaseUsageEntryResponse, ErrorResponse | void>({
         path: `/api/purchase-usages`,
         method: 'GET',
         query: query,
