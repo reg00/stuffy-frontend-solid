@@ -1,5 +1,4 @@
 /* eslint-disable */
-// @ts-nocheck
 /* tslint:disable */
 /*
  * ---------------------------------------------------------------
@@ -153,6 +152,8 @@ export interface GetPurchaseUsageEntry {
   id: string
   participant: ParticipantShortEntry
   purchase: PurchaseShortEntry
+  /** @format int32 */
+  amount?: number
 }
 
 export interface GetPurchaseUsageEntryResponse {
@@ -266,6 +267,8 @@ export interface PurchaseUsageShortEntry {
   purchaseUsageId: string
   /** @format uuid */
   participantId?: string
+  /** @format int32 */
+  amount?: number
 }
 
 export interface RegisterModel {
@@ -345,6 +348,8 @@ export interface UpsertPurchaseUsageEntry {
   purchaseId: string
   /** @format uuid */
   participantId: string
+  /** @format int32 */
+  amount?: number | null
 }
 
 export interface UpsertUnitTypeEntry {
@@ -1662,6 +1667,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          * @default 10
          */
         limit?: number
+        /** @format uuid */
+        eventId?: string
         /** @format uuid */
         participantId?: string
         /** @format uuid */

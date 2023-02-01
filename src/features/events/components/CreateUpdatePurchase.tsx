@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   FormControl,
   FormLabel,
   Input,
@@ -82,11 +83,11 @@ const CreateUpdatePurchase: Component<Props> = ({
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    debugger
     const name = e.target.name.value
     const cost = e.target.cost.value
     const amount = e.target.amount.value
     const eventId = e.target.eventId.value
+    const isPartial = e.target.isPartial.checked
     const _participantId = participantId()
     const unitTypeId = unitType()
 
@@ -174,6 +175,10 @@ const CreateUpdatePurchase: Component<Props> = ({
           </SelectContent>
         </Select>
       </FormControl>
+      <Checkbox id="isPartial" defaultChecked>
+        Частичная покупка
+      </Checkbox>
+
       <Button class="mt-2" type="submit" rightIcon={<PlusIcon />}>
         Создать
       </Button>

@@ -11,7 +11,9 @@ import {
   createResource,
   createSignal,
   For,
+  Match,
   Resource,
+  Switch,
 } from 'solid-js'
 
 import './EventTable.css'
@@ -19,8 +21,9 @@ import './EventTable.css'
 import {
   GetPurchaseEntry,
   ParticipantShortEntry,
+  UpsertPurchaseUsageEntry,
 } from '../../../api/__generated__/stuffyHelperApi'
-import { Checkbox, notificationService } from '@hope-ui/solid'
+import { Checkbox, Input, notificationService } from '@hope-ui/solid'
 import { createStore } from 'solid-js/store'
 import api from '../../../api/api'
 
@@ -28,39 +31,136 @@ createColumnHelper()
 
 declare module '@tanstack/solid-table' {
   interface TableMeta<TData extends RowData> {
-    updateData: (rowId: string, columnId: string, value: boolean) => void
+    updatePurchaseUsage: (
+      rowId: string,
+      columnId: string,
+      value: number
+    ) => void
   }
 }
 
 type P = {
+  eventId: string
   participants: Resource<ParticipantShortEntry[]>
   purchases: Resource<GetPurchaseEntry[]>
 }
-const EventTable: Component<P> = ({ participants, purchases }) => {
-  const kekw = () =>
+
+type NormParticipant = GetPurchaseEntry & {
+  // здесь храним number
+  cellValues: Record<string, number>
+}
+const EventTable: Component<P> = ({ eventId, participants, purchases }) => {
+  const normalizedParticipants = () =>
     purchases().map((purchase) => {
       const cellValues = participants()
         .map((participant) => {
-          const check = !!purchase.purchaseUsages.find(
+          const purchaseUsage = purchase.purchaseUsages.find(
             (usage) => usage.participantId === participant.id
           )
 
           return {
             participantId: participant.id,
-            value: check,
+            value: purchaseUsage?.amount ?? 0,
           }
         })
         .reduce((acc, current) => {
           acc[current.participantId] = current.value
           return acc
-        }, {} as Record<string, boolean>)
+        }, {} as Record<string, number>)
 
       return { ...purchase, cellValues }
     })
 
-  type DataType = GetPurchaseEntry & { cellValues: Record<string, boolean> }
+  type S = { rows: NormParticipant[] }
+  const [state, setState] = createStore<S>({
+    rows: normalizedParticipants(),
+  })
 
-  const columnHelper = createColumnHelper<DataType>()
+  const fetcher = () =>
+    api.purchaseUsagesList({ eventId }).then(({ data }) => data.data)
+  const [purchaseUsages, { refetch: refetchPurchaseUsages }] = createResource(
+    fetcher,
+    { initialValue: [] }
+  )
+
+  const patchServer = async (
+    rowId: string,
+    columnId: string,
+    value: number,
+    abortController: AbortController
+  ) => {
+    // OPTIMISTIC UI STUFF
+    // const purchaseUsage = purchases()
+    //   .find((purchase) => purchase.id === rowId)
+    //   ?.purchaseUsages.find((usage) => usage.participantId === columnId)
+    const purchaseUsage = purchaseUsages().find(
+      (usage) => usage.participant.id === columnId
+    )
+
+    try {
+      if (purchaseUsage) {
+        if (value == 0) {
+          await api.purchaseUsagesDelete(purchaseUsage.id, {
+            signal: abortController.signal,
+          })
+
+          notificationService.show({
+            title: 'Клетка удалена успешно',
+            status: 'success',
+          })
+          refetchPurchaseUsages()
+
+          return
+        } else {
+          const payload: UpsertPurchaseUsageEntry = {
+            purchaseId: rowId,
+            participantId: columnId,
+            amount: value,
+          }
+          await api.purchaseUsagesPartialUpdate(purchaseUsage.id, payload, {
+            signal: abortController.signal,
+          })
+
+          notificationService.show({
+            title: 'Клетка обновлена успешно',
+            status: 'success',
+          })
+
+          return
+        }
+      }
+
+      if (value === 0) return
+
+      const payload: UpsertPurchaseUsageEntry = {
+        purchaseId: rowId,
+        participantId: columnId,
+        amount: value,
+      }
+      await api.purchaseUsagesCreate(payload, {
+        signal: abortController.signal,
+      })
+      notificationService.show({
+        title: 'Клетка создана успешно',
+        status: 'success',
+      })
+      refetchPurchaseUsages()
+      return
+    } catch (error) {
+      // применяем oldValue при ошибке
+      // setState('rows', (row) => row.id === rowId, 'cellValues', columnId, value)
+    }
+  }
+
+  const updatePurchaseUsage = async (
+    rowId: string,
+    columnId: string,
+    value: number
+  ) => {
+    setState('rows', (row) => row.id === rowId, 'cellValues', columnId, value)
+  }
+
+  const columnHelper = createColumnHelper<NormParticipant>()
 
   const columns = () => {
     const last = participants().map((participant) => {
@@ -71,18 +171,93 @@ const EventTable: Component<P> = ({ participants, purchases }) => {
           header: participant.name,
           cell: ({ getValue, row, column: { id }, table }) => {
             const initialValue = getValue()
-            const [value, setValue] = createSignal<boolean>(
-              initialValue as boolean
-            )
+            const isPartial = row.original.isPartial
+            const [value, setValue] = createSignal<number>(initialValue)
 
-            const handleChange = (e) => {
-              const val = e.target.checked
-              setValue(val)
+            let controller: AbortController | null
 
-              table.options.meta?.updateData(row.original.id, id, value())
+            const setValueWithEffect = async (
+              _value: number
+            ): Promise<void> => {
+              const oldValue = value()
+              setValue(_value)
+              table.options.meta?.updatePurchaseUsage(
+                row.original.id,
+                id,
+                _value
+              )
+
+              if (controller) {
+                controller.abort()
+              }
+
+              controller = new AbortController()
+
+              if (oldValue === _value) return
+
+              try {
+                await patchServer(row.original.id, id, _value, controller)
+              } catch (error) {
+                // при ошибке ставим старое значение клетки
+                table.options.meta?.updatePurchaseUsage(
+                  row.original.id,
+                  id,
+                  oldValue
+                )
+
+                notificationService.show({
+                  title: 'При изменении клетки произошла ошибка',
+                  status: 'danger',
+                })
+              }
             }
 
-            return <Checkbox checked={value()} onChange={handleChange} />
+            const booleanValue = () => !!value()
+            const handleBooleanChange = (e) => {
+              const val = e.target.checked as boolean
+              setValueWithEffect(Number(val))
+            }
+
+            function isNumeric(n) {
+              return !isNaN(parseFloat(n)) && isFinite(n)
+            }
+
+            const handleBlur = (e) => {
+              const val = e.target.value as string
+
+              if (
+                isNumeric(val) &&
+                Number.isInteger(Number(val)) &&
+                Number(val) > 0
+              ) {
+                setValueWithEffect(Number(val))
+                return
+              }
+
+              setValueWithEffect(0)
+            }
+
+            return (
+              <Switch>
+                <Match when={!isPartial}>
+                  <Checkbox
+                    checked={booleanValue()}
+                    onChange={handleBooleanChange}
+                  />
+                </Match>
+                <Match when={isPartial}>
+                  <Input
+                    type="number"
+                    value={value()}
+                    onBlur={handleBlur}
+                    // onInput={handleNumberChange}
+                  />
+                  {/* <Checkbox checked={booleanValue()} onChange={handleBooleanChange} /> */}
+                </Match>
+              </Switch>
+            )
+
+            return
           },
         }
       )
@@ -100,63 +275,19 @@ const EventTable: Component<P> = ({ participants, purchases }) => {
     ]
   }
 
-  const [{ rows }, setStore] = createStore({ rows: kekw() })
-
-  const patchPurchaseUsages = async (
-    purchaseId: string,
-    participantId: string,
-    value: boolean
-  ) => {
-    try {
-      if (value) {
-        api.purchaseUsagesCreate({ purchaseId, participantId })
-      } else {
-        const { data } = await api.purchaseUsagesList({
-          purchaseId,
-          participantId,
-        })
-        await api.purchaseUsagesDelete(data.data[0].id)
-
-        notificationService.show({
-          title: 'Таблица изменена',
-          status: 'success',
-        })
-      }
-    } catch (error) {}
-  }
-
   const table = createSolidTable({
     get data() {
-      return rows
+      return state.rows
     },
     columns: columns(),
     getCoreRowModel: getCoreRowModel(),
     meta: {
-      updateData: (rowId: string, columnId: string, value: boolean) => {
-        setStore('rows', (old) =>
-          old.map((row) => {
-            if (rowId !== row.id) return row
-
-            const newRow = {
-              ...row,
-              cellValues: {
-                ...row.cellValues,
-                [columnId]: value,
-              },
-            }
-
-            patchPurchaseUsages(rowId, columnId, value)
-
-            return newRow
-          })
-        )
-      },
+      updatePurchaseUsage,
     },
   })
 
   return (
     <div class="p-2">
-      {/* {JSON.stringify(data())} */}
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -196,26 +327,6 @@ const EventTable: Component<P> = ({ participants, purchases }) => {
             )}
           </For>
         </tbody>
-        {/* <tfoot>
-          <For each={table.getFooterGroups()}>
-            {(footerGroup) => (
-              <tr>
-                <For each={footerGroup.headers}>
-                  {(header) => (
-                    <th>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext()
-                          )}
-                    </th>
-                  )}
-                </For>
-              </tr>
-            )}
-          </For>
-        </tfoot> */}
       </table>
     </div>
   )

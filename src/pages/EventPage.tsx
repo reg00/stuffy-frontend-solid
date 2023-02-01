@@ -38,6 +38,7 @@ type EventProps = {
   purchases: Resource<GetPurchaseEntry[]>
   refetch: () => void
   refetchParticipants: () => void
+  refetchPurchases: () => void
 }
 const Event: Component<EventProps> = ({
   event,
@@ -45,6 +46,7 @@ const Event: Component<EventProps> = ({
   participants,
   refetch,
   refetchParticipants,
+  refetchPurchases,
 }) => {
   const [showAddParticipant, setShowAddParticipant] = createSignal(false)
   const [showCreate, setShowCreate] = createSignal(false)
@@ -172,8 +174,10 @@ const Event: Component<EventProps> = ({
       <div class="events-table">
         <h5>Таблица</h5>
         <EventTable
+          eventId={event.id}
           participants={participants}
           purchases={purchases}
+          refetchPurchases={refetchPurchases}
         />
       </div>
     </div>
@@ -197,7 +201,10 @@ const EventPage: Component = () => {
 
   const purchaseFetcher = (eventId) =>
     api.purchasesList({ eventId }).then((res) => res.data.data)
-  const [purchases] = createResource(() => params.eventId, purchaseFetcher)
+  const [purchases, { refetch: refetchPurchases }] = createResource(
+    () => params.eventId,
+    purchaseFetcher
+  )
 
   return (
     <Show when={event()} keyed>
@@ -207,6 +214,7 @@ const EventPage: Component = () => {
           participants={participants}
           purchases={purchases}
           refetch={refetch}
+          refetchPurchases={refetchPurchases}
           refetchParticipants={refetchParticipants}
         />
       )}

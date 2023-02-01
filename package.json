@@ -35,5 +35,8 @@
     "swagger-typescript-api": {
       "typescript": "4.7.4"
     }
+  },
+  "resolutions": {
+    "axios": "1.2.1"
   }
 }
