@@ -156,14 +156,6 @@ export interface GetPurchaseUsageEntry {
   amount?: number
 }
 
-export interface GetPurchaseUsageEntryResponse {
-  data?: GetPurchaseUsageEntry[] | null
-  /** @format int32 */
-  totalPages?: number
-  /** @format int32 */
-  total?: number
-}
-
 export interface GetUnitTypeEntry {
   /** @format uuid */
   id: string
@@ -266,9 +258,19 @@ export interface PurchaseUsageShortEntry {
   /** @format uuid */
   purchaseUsageId: string
   /** @format uuid */
+  purchaseId?: string
+  /** @format uuid */
   participantId?: string
   /** @format int32 */
   amount?: number
+}
+
+export interface PurchaseUsageShortEntryResponse {
+  data?: PurchaseUsageShortEntry[] | null
+  /** @format int32 */
+  totalPages?: number
+  /** @format int32 */
+  total?: number
 }
 
 export interface RegisterModel {
@@ -1676,7 +1678,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {}
     ) =>
-      this.request<GetPurchaseUsageEntryResponse, ErrorResponse | void>({
+      this.request<PurchaseUsageShortEntryResponse, ErrorResponse | void>({
         path: `/api/purchase-usages`,
         method: 'GET',
         query: query,
