@@ -175,9 +175,6 @@ const Event: Component<EventProps> = ({
         <h5>Таблица</h5>
         <EventTable
           eventId={event.id}
-          participants={participants}
-          purchases={purchases}
-          // refetchPurchases={refetchPurchases}
         />
       </div>
     </div>
@@ -202,7 +199,7 @@ const EventPage: Component = () => {
 
   const purchaseFetcher = (eventId) =>
     api.purchasesList({ eventId }).then((res) => res.data.data)
-  const [purchases, { refetch: refetchPurchases }] = createResource(
+  const [purchases, { refetch: refetchPurchases, mutate: mutatePurchases }] = createResource(
     () => params.eventId,
     purchaseFetcher,
     { initialValue: [] }
