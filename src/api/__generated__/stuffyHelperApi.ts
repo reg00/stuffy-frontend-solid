@@ -1,5 +1,4 @@
 /* eslint-disable */
-// @ts-nocheck
 /* tslint:disable */
 /*
  * ---------------------------------------------------------------
@@ -73,6 +72,26 @@ export interface FriendsRequestShort {
   userIdTo?: string | null
   userNameFrom?: string | null
   userNameTo?: string | null
+}
+
+export interface GetDebtEntry {
+  /** @format uuid */
+  id?: string
+  /** @format double */
+  amount?: number
+  isSent?: boolean
+  isComfirmed?: boolean
+  event?: EventShortEntry
+  borrower?: UserShortEntry
+  debtor?: UserShortEntry
+}
+
+export interface GetDebtEntryResponse {
+  data?: GetDebtEntry[] | null
+  /** @format int32 */
+  totalPages?: number
+  /** @format int32 */
+  total?: number
 }
 
 export interface GetEventEntry {
@@ -153,14 +172,8 @@ export interface GetPurchaseUsageEntry {
   id: string
   participant: ParticipantShortEntry
   purchase: PurchaseShortEntry
-}
-
-export interface GetPurchaseUsageEntryResponse {
-  data?: GetPurchaseUsageEntry[] | null
   /** @format int32 */
-  totalPages?: number
-  /** @format int32 */
-  total?: number
+  amount?: number
 }
 
 export interface GetUnitTypeEntry {
@@ -265,7 +278,19 @@ export interface PurchaseUsageShortEntry {
   /** @format uuid */
   purchaseUsageId: string
   /** @format uuid */
+  purchaseId?: string
+  /** @format uuid */
   participantId?: string
+  /** @format int32 */
+  amount?: number
+}
+
+export interface PurchaseUsageShortEntryResponse {
+  data?: PurchaseUsageShortEntry[] | null
+  /** @format int32 */
+  totalPages?: number
+  /** @format int32 */
+  total?: number
 }
 
 export interface RegisterModel {
@@ -345,6 +370,8 @@ export interface UpsertPurchaseUsageEntry {
   purchaseId: string
   /** @format uuid */
   participantId: string
+  /** @format int32 */
+  amount?: number | null
 }
 
 export interface UpsertUnitTypeEntry {
@@ -815,6 +842,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags Debt
+     * @name DebtsList
+     * @summary Получение списка долгов
+     * @request GET:/api/debts
+     * @secure
+     */
+    debtsList: (params: RequestParams = {}) =>
+      this.request<GetDebtEntryResponse, ErrorResponse | void>({
+        path: `/api/debts`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Event
      * @name EventsList
      * @summary Получение списка ивентов
@@ -1030,6 +1075,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'POST',
         secure: true,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Event
+     * @name EventsCheckoutCreate
+     * @summary Расчет долгов по ивенту
+     * @request POST:/api/events/{eventId}/checkout
+     * @secure
+     */
+    eventsCheckoutCreate: (eventId: string, params: RequestParams = {}) =>
+      this.request<any, ErrorResponse>({
+        path: `/api/events/${eventId}/checkout`,
+        method: 'POST',
+        secure: true,
         ...params,
       }),
 
@@ -1442,6 +1504,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         purchaseTags?: string[]
         /** @format uuid */
         unitTypeId?: string
+        isComplete?: boolean
       },
       params: RequestParams = {}
     ) =>
@@ -1663,13 +1726,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          */
         limit?: number
         /** @format uuid */
+        eventId?: string
+        /** @format uuid */
         participantId?: string
         /** @format uuid */
         purchaseId?: string
       },
       params: RequestParams = {}
     ) =>
-      this.request<GetPurchaseUsageEntryResponse, ErrorResponse | void>({
+      this.request<PurchaseUsageShortEntryResponse, ErrorResponse | void>({
         path: `/api/purchase-usages`,
         method: 'GET',
         query: query,

@@ -2146,23 +2146,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "axios@npm:0.25.0"
-  dependencies:
-    follow-redirects: ^1.14.7
-  checksum: 2a8a3787c05f2a0c9c3878f49782357e2a9f38945b93018fb0c4fd788171c43dceefbb577988628e09fea53952744d1ecebde234b561f1e703aa43e0a598a3ad
-  languageName: node
-  linkType: hard
-
-"axios@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "axios@npm:1.2.3"
+"axios@npm:1.2.1":
+  version: 1.2.1
+  resolution: "axios@npm:1.2.1"
   dependencies:
     follow-redirects: ^1.15.0
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: 52802a1e317e8a6fd2c014aa06a6978ea8381142c98e91f2be5e9e213b77b541451e588e17a3d6db2d6e76faea82911239ca4981d7af959d67fb66018dab3ac9
+  checksum: c4dc4e119064c9aed09a3de309bedb797a139a6fb372223aafe3e0c10a7d4a14e4d3e9c9d309467fadb9d2b490b891ee3df96ef5b55716bb971910466ff9f0c5
   languageName: node
   linkType: hard
 
@@ -3100,10 +3091,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eta@npm:1.12.3":
-  version: 1.12.3
-  resolution: "eta@npm:1.12.3"
-  checksum: 390c1cd320755cb98fd5a4a911539e8ed498fc49b82414f0023033ff606d80a34e6df0aeeb9fb0b519b318a750e6d17a72fc25f8a8c686cfc52d638e998237a1
+"eta@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "eta@npm:2.0.1"
+  checksum: 595e18e762925561929a43d06493c8b46ef66dfa967dfcde7050acb016182d0bad87a19177384c93f04ffc87e918429688e07fc428c8691ff50cdfcb197f938a
   languageName: node
   linkType: hard
 
@@ -3179,7 +3170,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.7, follow-redirects@npm:^1.15.0":
+"follow-redirects@npm:^1.15.0":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -5056,14 +5047,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-typescript-api@npm:^12.0.2":
-  version: 12.0.2
-  resolution: "swagger-typescript-api@npm:12.0.2"
+"swagger-typescript-api@npm:^12.0.3":
+  version: 12.0.3
+  resolution: "swagger-typescript-api@npm:12.0.3"
   dependencies:
     "@types/swagger-schema-official": 2.0.22
     cosmiconfig: 7.0.1
     didyoumean: ^1.2.2
-    eta: 1.12.3
+    eta: ^2.0.0
     js-yaml: 4.1.0
     lodash: 4.17.21
     make-dir: 3.1.0
@@ -5077,7 +5068,7 @@ __metadata:
   bin:
     sta: index.js
     swagger-typescript-api: index.js
-  checksum: f876d9b1d6aca9d422331997a442068075dbc6cee3b6018d62b03495a48ed7fc1e8ce86f8a0a73ce4a69a829dd8bfb93c4d777601f2da76dcb1b880a838f8467
+  checksum: 039f56ad3a19354b2c444886c4ccd6cb6b24ce3a8c4e02ee5f1ee9d4d0a4216f6c7449f01b2dc98ee84a4ddfe50f5af5a7954a3ecc865826c45697ba6684b6f6
   languageName: node
   linkType: hard
 
@@ -5430,7 +5421,7 @@ __metadata:
     solid-devtools: ^0.24.7
     solid-js: ^1.6.6
     solid-transition-group: ^0.0.12
-    swagger-typescript-api: ^12.0.2
+    swagger-typescript-api: ^12.0.3
     tailwindcss: ^3.2.4
     typescript: ^4.9.4
     vite: ^4.0.3

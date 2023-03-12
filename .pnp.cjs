@@ -33,14 +33,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@stitches/core", "npm:1.2.8"],\
             ["@tanstack/solid-table", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:8.7.8"],\
             ["autoprefixer", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:10.4.13"],\
-            ["axios", "npm:1.2.3"],\
+            ["axios", "npm:1.2.1"],\
             ["dayjs", "npm:1.11.7"],\
             ["node-fetch-h2", "npm:2.3.1-0"],\
             ["postcss", "npm:8.4.21"],\
             ["solid-devtools", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:0.24.7"],\
             ["solid-js", "npm:1.6.9"],\
             ["solid-transition-group", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:0.0.12"],\
-            ["swagger-typescript-api", "npm:12.0.2"],\
+            ["swagger-typescript-api", "npm:12.0.3"],\
             ["tailwindcss", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:3.2.4"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"],\
             ["vite", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:4.0.4"],\
@@ -3506,19 +3506,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["axios", [\
-        ["npm:0.25.0", {\
-          "packageLocation": "./.yarn/cache/axios-npm-0.25.0-a1c287d287-2a8a3787c0.zip/node_modules/axios/",\
+        ["npm:1.2.1", {\
+          "packageLocation": "./.yarn/cache/axios-npm-1.2.1-4056ddcb4c-c4dc4e1190.zip/node_modules/axios/",\
           "packageDependencies": [\
-            ["axios", "npm:0.25.0"],\
-            ["follow-redirects", "virtual:f755ac0cc4c70c35e076928f8aa6f0263fd636cc4e2099e4e273c13cc606b69b7a388f291c0c8619acb7408ff1b451b75383f6c8b49bc764e34ed80f23de3d43#npm:1.15.2"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:1.2.3", {\
-          "packageLocation": "./.yarn/cache/axios-npm-1.2.3-f755ac0cc4-52802a1e31.zip/node_modules/axios/",\
-          "packageDependencies": [\
-            ["axios", "npm:1.2.3"],\
-            ["follow-redirects", "virtual:f755ac0cc4c70c35e076928f8aa6f0263fd636cc4e2099e4e273c13cc606b69b7a388f291c0c8619acb7408ff1b451b75383f6c8b49bc764e34ed80f23de3d43#npm:1.15.2"],\
+            ["axios", "npm:1.2.1"],\
+            ["follow-redirects", "virtual:4056ddcb4c2d270bf0963fb84906c3564ee7d8e9416b8378cd3a237ff189f972aa64453a2488a5a795feebb3d7aabad002a7493097d1b2c78991f626dc379bd9#npm:1.15.2"],\
             ["form-data", "npm:4.0.0"],\
             ["proxy-from-env", "npm:1.1.0"]\
           ],\
@@ -4595,10 +4587,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["eta", [\
-        ["npm:1.12.3", {\
-          "packageLocation": "./.yarn/cache/eta-npm-1.12.3-0703b1e979-390c1cd320.zip/node_modules/eta/",\
+        ["npm:2.0.1", {\
+          "packageLocation": "./.yarn/cache/eta-npm-2.0.1-3984e9ae1b-595e18e762.zip/node_modules/eta/",\
           "packageDependencies": [\
-            ["eta", "npm:1.12.3"]\
+            ["eta", "npm:2.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4691,10 +4683,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:f755ac0cc4c70c35e076928f8aa6f0263fd636cc4e2099e4e273c13cc606b69b7a388f291c0c8619acb7408ff1b451b75383f6c8b49bc764e34ed80f23de3d43#npm:1.15.2", {\
-          "packageLocation": "./.yarn/__virtual__/follow-redirects-virtual-648473d7d2/0/cache/follow-redirects-npm-1.15.2-1ec1dd82be-faa66059b6.zip/node_modules/follow-redirects/",\
+        ["virtual:4056ddcb4c2d270bf0963fb84906c3564ee7d8e9416b8378cd3a237ff189f972aa64453a2488a5a795feebb3d7aabad002a7493097d1b2c78991f626dc379bd9#npm:1.15.2", {\
+          "packageLocation": "./.yarn/__virtual__/follow-redirects-virtual-411e96405e/0/cache/follow-redirects-npm-1.15.2-1ec1dd82be-faa66059b6.zip/node_modules/follow-redirects/",\
           "packageDependencies": [\
-            ["follow-redirects", "virtual:f755ac0cc4c70c35e076928f8aa6f0263fd636cc4e2099e4e273c13cc606b69b7a388f291c0c8619acb7408ff1b451b75383f6c8b49bc764e34ed80f23de3d43#npm:1.15.2"],\
+            ["follow-redirects", "virtual:4056ddcb4c2d270bf0963fb84906c3564ee7d8e9416b8378cd3a237ff189f972aa64453a2488a5a795feebb3d7aabad002a7493097d1b2c78991f626dc379bd9#npm:1.15.2"],\
             ["@types/debug", null],\
             ["debug", null]\
           ],\
@@ -6898,14 +6890,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["swagger-typescript-api", [\
-        ["npm:12.0.2", {\
-          "packageLocation": "./.yarn/cache/swagger-typescript-api-npm-12.0.2-15ea55097a-f876d9b1d6.zip/node_modules/swagger-typescript-api/",\
+        ["npm:12.0.3", {\
+          "packageLocation": "./.yarn/cache/swagger-typescript-api-npm-12.0.3-82483915ab-039f56ad3a.zip/node_modules/swagger-typescript-api/",\
           "packageDependencies": [\
-            ["swagger-typescript-api", "npm:12.0.2"],\
+            ["swagger-typescript-api", "npm:12.0.3"],\
             ["@types/swagger-schema-official", "npm:2.0.22"],\
             ["cosmiconfig", "npm:7.0.1"],\
             ["didyoumean", "npm:1.2.2"],\
-            ["eta", "npm:1.12.3"],\
+            ["eta", "npm:2.0.1"],\
             ["js-yaml", "npm:4.1.0"],\
             ["lodash", "npm:4.17.21"],\
             ["make-dir", "npm:3.1.0"],\
@@ -7363,14 +7355,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@stitches/core", "npm:1.2.8"],\
             ["@tanstack/solid-table", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:8.7.8"],\
             ["autoprefixer", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:10.4.13"],\
-            ["axios", "npm:1.2.3"],\
+            ["axios", "npm:1.2.1"],\
             ["dayjs", "npm:1.11.7"],\
             ["node-fetch-h2", "npm:2.3.1-0"],\
             ["postcss", "npm:8.4.21"],\
             ["solid-devtools", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:0.24.7"],\
             ["solid-js", "npm:1.6.9"],\
             ["solid-transition-group", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:0.0.12"],\
-            ["swagger-typescript-api", "npm:12.0.2"],\
+            ["swagger-typescript-api", "npm:12.0.3"],\
             ["tailwindcss", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:3.2.4"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"],\
             ["vite", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:4.0.4"],\
@@ -7406,7 +7398,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/wait-on-npm-6.0.1-9e03b09170-e4d62aa414.zip/node_modules/wait-on/",\
           "packageDependencies": [\
             ["wait-on", "npm:6.0.1"],\
-            ["axios", "npm:0.25.0"],\
+            ["axios", "npm:1.2.1"],\
             ["joi", "npm:17.7.0"],\
             ["lodash", "npm:4.17.21"],\
             ["minimist", "npm:1.2.7"],\
