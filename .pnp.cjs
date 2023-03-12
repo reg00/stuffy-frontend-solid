@@ -40,7 +40,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["solid-devtools", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:0.24.7"],\
             ["solid-js", "npm:1.6.9"],\
             ["solid-transition-group", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:0.0.12"],\
-            ["swagger-typescript-api", "npm:12.0.2"],\
+            ["swagger-typescript-api", "npm:12.0.3"],\
             ["tailwindcss", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:3.2.4"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=23ec76"],\
             ["vite", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:4.0.4"],\
@@ -4587,10 +4587,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["eta", [\
-        ["npm:1.12.3", {\
-          "packageLocation": "./.yarn/cache/eta-npm-1.12.3-0703b1e979-390c1cd320.zip/node_modules/eta/",\
+        ["npm:2.0.1", {\
+          "packageLocation": "./.yarn/cache/eta-npm-2.0.1-3984e9ae1b-595e18e762.zip/node_modules/eta/",\
           "packageDependencies": [\
-            ["eta", "npm:1.12.3"]\
+            ["eta", "npm:2.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -6890,14 +6890,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["swagger-typescript-api", [\
-        ["npm:12.0.2", {\
-          "packageLocation": "./.yarn/cache/swagger-typescript-api-npm-12.0.2-15ea55097a-f876d9b1d6.zip/node_modules/swagger-typescript-api/",\
+        ["npm:12.0.3", {\
+          "packageLocation": "./.yarn/cache/swagger-typescript-api-npm-12.0.3-82483915ab-039f56ad3a.zip/node_modules/swagger-typescript-api/",\
           "packageDependencies": [\
-            ["swagger-typescript-api", "npm:12.0.2"],\
+            ["swagger-typescript-api", "npm:12.0.3"],\
             ["@types/swagger-schema-official", "npm:2.0.22"],\
             ["cosmiconfig", "npm:7.0.1"],\
             ["didyoumean", "npm:1.2.2"],\
-            ["eta", "npm:1.12.3"],\
+            ["eta", "npm:2.0.1"],\
             ["js-yaml", "npm:4.1.0"],\
             ["lodash", "npm:4.17.21"],\
             ["make-dir", "npm:3.1.0"],\
@@ -7362,7 +7362,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["solid-devtools", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:0.24.7"],\
             ["solid-js", "npm:1.6.9"],\
             ["solid-transition-group", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:0.0.12"],\
-            ["swagger-typescript-api", "npm:12.0.2"],\
+            ["swagger-typescript-api", "npm:12.0.3"],\
             ["tailwindcss", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:3.2.4"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=23ec76"],\
             ["vite", "virtual:e89a60c7c352dd76fb01ae57e884900eea222b691259f2ab7c26f672c7da9c9f0f96d0e37eb17a9a95cd0e05fb026d04c1efae09031c0b70564ac5dea54942f5#npm:4.0.4"],\

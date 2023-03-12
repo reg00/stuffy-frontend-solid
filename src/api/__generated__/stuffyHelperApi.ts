@@ -74,6 +74,26 @@ export interface FriendsRequestShort {
   userNameTo?: string | null
 }
 
+export interface GetDebtEntry {
+  /** @format uuid */
+  id?: string
+  /** @format double */
+  amount?: number
+  isSent?: boolean
+  isComfirmed?: boolean
+  event?: EventShortEntry
+  borrower?: UserShortEntry
+  debtor?: UserShortEntry
+}
+
+export interface GetDebtEntryResponse {
+  data?: GetDebtEntry[] | null
+  /** @format int32 */
+  totalPages?: number
+  /** @format int32 */
+  total?: number
+}
+
 export interface GetEventEntry {
   /** @format uuid */
   id: string
@@ -822,6 +842,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags Debt
+     * @name DebtsList
+     * @summary Получение списка долгов
+     * @request GET:/api/debts
+     * @secure
+     */
+    debtsList: (params: RequestParams = {}) =>
+      this.request<GetDebtEntryResponse, ErrorResponse | void>({
+        path: `/api/debts`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags Event
      * @name EventsList
      * @summary Получение списка ивентов
@@ -1037,6 +1075,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'POST',
         secure: true,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Event
+     * @name EventsCheckoutCreate
+     * @summary Расчет долгов по ивенту
+     * @request POST:/api/events/{eventId}/checkout
+     * @secure
+     */
+    eventsCheckoutCreate: (eventId: string, params: RequestParams = {}) =>
+      this.request<any, ErrorResponse>({
+        path: `/api/events/${eventId}/checkout`,
+        method: 'POST',
+        secure: true,
         ...params,
       }),
 
@@ -1449,6 +1504,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         purchaseTags?: string[]
         /** @format uuid */
         unitTypeId?: string
+        isComplete?: boolean
       },
       params: RequestParams = {}
     ) =>
