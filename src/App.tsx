@@ -4,6 +4,7 @@ import Login from './pages/LoginPage'
 import SignUp from './pages/SignUpPage'
 import SignOut from './pages/SignoutPage'
 import Events from './pages/EventsPage'
+import Debts from './pages/DebtsPage'
 import Event from './pages/EventPage'
 import SignUpSuccess from './pages/SignUpSuccessPage'
 import { AuthContext } from './features/auth/useAuth'
@@ -22,6 +23,10 @@ const App: Component = () => {
             <A href={'/'} class="flex items-center">
               Stuffy helper
             </A>
+            <A href={'/debts'} class="flex items-center">
+              Долги
+            </A>
+
             <div class="ml-auto">
               <Show when={state.user} fallback={<A href={'/login'}>Войти</A>}>
                 <div class="inline-flex flex-nowrap gap-1 items-center">
@@ -76,6 +81,7 @@ const App: Component = () => {
           <Route path="/signout" component={SignOut} />
           <Route path="/events/:eventId" component={Event} />
           <Route path="/" component={Events} />
+          <Route path="/debts" component={Debts} />
         </Routes>
         </div>
       </div>

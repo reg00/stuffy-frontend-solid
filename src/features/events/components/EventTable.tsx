@@ -35,8 +35,14 @@ declare module '@tanstack/solid-table' {
 type P = {
   participants: Resource<ParticipantShortEntry[]>
   purchases: Resource<GetPurchaseEntry[]>
+  eventId: string
 }
-const EventTable: Component<P> = ({ participants, purchases }) => {
+const EventTable: Component<P> = ({ participants, purchases, eventId }) => {
+  const usagesFetcher = async () => {
+    return api.purchaseUsagesList({ eventId }).then((res) => res.data.data)
+  }
+  const usages = createResource(usagesFetcher)
+
   const kekw = () =>
     purchases().map((purchase) => {
       const cellValues = participants()
@@ -115,7 +121,7 @@ const EventTable: Component<P> = ({ participants, purchases }) => {
           purchaseId,
           participantId,
         })
-        await api.purchaseUsagesDelete(data.data[0].id)
+        await api.purchaseUsagesDelete(data.data[0].purchaseUsageId)
 
         notificationService.show({
           title: 'Таблица изменена',
