@@ -5,6 +5,7 @@ import SignUp from './pages/SignUpPage'
 import SignOut from './pages/SignoutPage'
 import Events from './pages/EventsPage'
 import Event from './pages/EventPage'
+import Debts from './pages/DebtsPage'
 import SignUpSuccess from './pages/SignUpSuccessPage'
 import { AuthContext } from './features/auth/useAuth'
 import { Avatar, IconButton, Tooltip } from '@hope-ui/solid'
@@ -18,10 +19,14 @@ const App: Component = () => {
     <div class="min-h-screen flex flex-col">
       <header>
         <nav class="bg-white border-b border-solid border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
-          <div class="container flex flex-wrap items-center mx-auto">
+          <div class="container flex flex-wrap items-center mx-auto gap-1">
             <A href={'/'} class="flex items-center">
               Stuffy helper
             </A>
+            <A href={'/debts'} class="flex items-center">
+              Долги
+            </A>
+
             <div class="ml-auto">
               <Show when={state.user} fallback={<A href={'/login'}>Войти</A>}>
                 <div class="inline-flex flex-nowrap gap-1 items-center">
@@ -75,6 +80,7 @@ const App: Component = () => {
           <Route path="/signup" component={SignUp} />
           <Route path="/signout" component={SignOut} />
           <Route path="/events/:eventId" component={Event} />
+          <Route path="/debts" component={Debts} />
           <Route path="/" component={Events} />
         </Routes>
         </div>

@@ -79,6 +79,14 @@ const Event: Component<EventProps> = ({
     }
   }
 
+  const onCalculate = async () => {
+    const response = await api.eventsCheckoutCreate(event.id)
+
+    alert('расчитано')
+  }
+
+  
+
   return (
     <div class="event__detailed p-2">
       <Breadcrumb>
@@ -177,6 +185,8 @@ const Event: Component<EventProps> = ({
           eventId={event.id}
         />
       </div>
+
+      <Button onClick={onCalculate}>Расчитать</Button>
     </div>
   )
 }
