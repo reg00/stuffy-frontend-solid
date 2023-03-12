@@ -3,12 +3,9 @@ import { CellContext } from '@tanstack/solid-table'
 import { Component, createSignal, Match, Switch } from 'solid-js'
 import { NormalizedPurchase } from './EventTable'
 
-const EventTableCellFirst: Component<CellContext<NormalizedPurchase, string>> = ({
-  row,
-  getValue,
-  table,
-  column: { id: columnId },
-}) => {
+const EventTableCellFirst: Component<
+  CellContext<NormalizedPurchase, string>
+> = ({ row, getValue, table, column: { id: columnId } }) => {
   const [isPartial, setIsPartial] = createSignal(!!row.original.isPartial)
 
   const updatePurchase = table.options.meta.updatePurchase
@@ -34,14 +31,13 @@ const EventTableCellFirst: Component<CellContext<NormalizedPurchase, string>> = 
 
   let controller: AbortController | null
 
-
   const handleChange = async (e): Promise<void> => {
     const entry = row.original
 
     const payload = {
-        ...entry,
-        unitTypeId: entry.unitType.id,
-        isPartial: e.target.checked
+      ...entry,
+      unitTypeId: entry.unitType.id,
+      isPartial: e.target.checked,
     }
 
     setIsPartial(e.target.checked)
@@ -50,13 +46,18 @@ const EventTableCellFirst: Component<CellContext<NormalizedPurchase, string>> = 
 
   return (
     <div class="row-kek">
-        {/* <p>{getValue()}</p>
+      {/* <p>{getValue()}</p>
       <p>{numbers().join(', ')}</p> */}
-      {row.original.id.slice(0,4 )}
+      {row.original.id.slice(0, 4)}
       {/* <p>{row.original.name}</p>
       <p>max: {row.original.amount}</p> */}
       <p>isValid: {isValid() ? 'ok' : 'notok'}</p>
-      <Checkbox checked={isPartial()} onChange={handleChange} />
+      <Checkbox
+        checked={isPartial()}
+        onChange={handleChange}
+        disabled={row.original.isComplete}
+      />
+      {row.original.isComplete ? 'расчитано' : ''}
     </div>
   )
 }

@@ -1,9 +1,5 @@
 import { notificationService } from '@hope-ui/solid'
-import {
-  createEffect,
-  createResource,
-  createSignal,
-} from 'solid-js'
+import { createEffect, createResource, createSignal } from 'solid-js'
 import api from '../../../api/api'
 import {
   PurchaseUsageShortEntry,
@@ -30,6 +26,12 @@ const useTableState = ({ eventId }: P) => {
   const [purchases, { refetch: refetchPurchases, mutate: mutatePurchases }] =
     createResource(() => eventId, purchaseFetcher, { initialValue: [] })
 
+  // const sortedPurchases = () => {
+  //   return purchases()
+  //     .slice()
+  //     .sort((a, b) => Number(a.isComplete) - Number(b.isComplete))
+  // }
+
   const fetcher = () =>
     api.purchaseUsagesList({ eventId }).then(({ data }) => data.data)
   const [purchaseUsages, { mutate: mutatePurchaseUsages }] = createResource(
@@ -40,6 +42,11 @@ const useTableState = ({ eventId }: P) => {
   const [normalizedPurchases, setNormalizedPurchases] = createSignal<
     NormalizedPurchase[]
   >([])
+
+  const sortedNormalizedPurchases = () =>
+    normalizedPurchases()
+      .slice()
+      .sort((a, b) => Number(b.isComplete) - Number(a.isComplete))
 
   createEffect(() => {
     const newPurchases = purchases().map((purchase) => {
@@ -236,7 +243,7 @@ const useTableState = ({ eventId }: P) => {
   }
 
   return {
-    normalizedPurchases,
+    normalizedPurchases: sortedNormalizedPurchases,
     participants,
     patchServer,
     updatePurchase,

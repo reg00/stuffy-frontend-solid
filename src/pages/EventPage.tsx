@@ -81,11 +81,8 @@ const Event: Component<EventProps> = ({
 
   const onCalculate = async () => {
     const response = await api.eventsCheckoutCreate(event.id)
-
-    alert('расчитано')
+    refetchPurchases()
   }
-
-  
 
   return (
     <div class="event__detailed p-2">
@@ -181,9 +178,7 @@ const Event: Component<EventProps> = ({
       </div>
       <div class="events-table">
         <h5>Таблица</h5>
-        <EventTable
-          eventId={event.id}
-        />
+        <EventTable eventId={event.id} />
       </div>
 
       <Button onClick={onCalculate}>Расчитать</Button>
@@ -209,11 +204,8 @@ const EventPage: Component = () => {
 
   const purchaseFetcher = (eventId) =>
     api.purchasesList({ eventId }).then((res) => res.data.data)
-  const [purchases, { refetch: refetchPurchases, mutate: mutatePurchases }] = createResource(
-    () => params.eventId,
-    purchaseFetcher,
-    { initialValue: [] }
-  )
+  const [purchases, { refetch: refetchPurchases, mutate: mutatePurchases }] =
+    createResource(() => params.eventId, purchaseFetcher, { initialValue: [] })
 
   return (
     <Show when={event()} keyed>

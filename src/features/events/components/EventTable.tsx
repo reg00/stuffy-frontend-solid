@@ -122,7 +122,7 @@ const EventTable: Component<P> = ({ eventId }) => {
         <tbody>
           <For each={table.getRowModel().rows}>
             {(row) => (
-              <tr>
+              <tr classList={{ 'opacity-70': row.original.isComplete }}>
                 <For each={row.getVisibleCells()}>
                   {(cell) => (
                     <td>

@@ -144,6 +144,7 @@ export interface GetPurchaseEntry {
   /** @format double */
   amount: number
   isPartial: boolean
+  isComplete: boolean
   event: EventShortEntry
   purchaseTags?: PurchaseTagShortEntry[] | null
   unitType: UnitTypeShortEntry
@@ -255,6 +256,7 @@ export interface PurchaseShortEntry {
   /** @format double */
   amount: number
   isPartial: boolean
+  isComplete: boolean
   purchaseTags?: PurchaseTagShortEntry[] | null
   unitType?: UnitTypeShortEntry
 }
@@ -848,10 +850,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/debts
      * @secure
      */
-    debtsList: (params: RequestParams = {}) =>
+    debtsList: (
+      query?: {
+        /**
+         * @format int32
+         * @default 0
+         */
+        offset?: number
+        /**
+         * @format int32
+         * @default 10
+         */
+        limit?: number
+      },
+      params: RequestParams = {}
+    ) =>
       this.request<GetDebtEntryResponse, ErrorResponse | void>({
         path: `/api/debts`,
         method: 'GET',
+        query: query,
         secure: true,
         format: 'json',
         ...params,

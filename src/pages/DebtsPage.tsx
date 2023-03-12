@@ -32,10 +32,9 @@ const DebtCard: Component<P> = ({ debt }) => {
 function DebtsPage() {
   // const [events, { refetch }] = createResource(fetcher)
 
-  const debtsFetcher = () =>
-    api.debtsList().then((res) => res.data as GetDebtEntry[])
+  const debtsFetcher = () => api.debtsList().then((res) => res.data.data)
 
-  const [debts, { refetch }] = createResource(debtsFetcher)
+  const [debts] = createResource(debtsFetcher)
 
   return (
     <div class="w-full p-2">

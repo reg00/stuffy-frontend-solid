@@ -36,11 +36,7 @@ const EventTableCell: Component<CellContext<NormalizedPurchase, number>> = ({
       await patchServer(row.original.id, columnId, _value, controller)
     } catch (error) {
       // при ошибке ставим старое значение клетки
-      updatePurchaseUsage(
-        row.original.id,
-        columnId,
-        oldValue,
-      )
+      updatePurchaseUsage(row.original.id, columnId, oldValue)
 
       notificationService.show({
         title: 'При изменении клетки произошла ошибка',
@@ -73,10 +69,19 @@ const EventTableCell: Component<CellContext<NormalizedPurchase, number>> = ({
   return (
     <Switch>
       <Match when={!isPartial()}>
-        <Checkbox checked={booleanValue()} onChange={handleBooleanChange} />
+        <Checkbox
+          checked={booleanValue()}
+          onChange={handleBooleanChange}
+          disabled={row.original.isComplete}
+        />
       </Match>
       <Match when={isPartial()}>
-        <Input type="number" value={value()} onBlur={handleBlur} />
+        <Input
+          type="number"
+          value={value()}
+          onBlur={handleBlur}
+          disabled={row.original.isComplete}
+        />
       </Match>
     </Switch>
   )
